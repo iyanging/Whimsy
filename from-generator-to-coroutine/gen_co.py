@@ -9,7 +9,7 @@ class _Missing: ...
 
 
 class Future[T]:
-    """一次性的、用于传递结果数据的、可以设置回调的，容器."""
+    """一次性的、用于传递结果数据的，容器."""
 
     _parent: "Future[Any] | None"
     _generator: Generator["Future[Any] | None", Any, Any] | None
