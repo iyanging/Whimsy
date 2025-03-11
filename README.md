@@ -3,3 +3,5 @@
 收集一些在学习 & 工作过程中突发的奇思妙想~
 
 ## [使用 generator 来模拟 coroutine](./from_generator_to_coroutine/)
+
+## [使用 typing annotation 来进行依赖注入](./dependency_injection_by_typing/)
