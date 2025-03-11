@@ -1,3 +1,18 @@
+#  Copyright (c) 2025 iyanging
+#
+#  Whimsy is licensed under Mulan PSL v2.
+#  You can use this software according to the terms and conditions of the Mulan PSL v2.
+#  You may obtain a copy of Mulan PSL v2 at:
+#      http://license.coscl.org.cn/MulanPSL2
+#
+#  THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+#  EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+#  MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+#
+#  See the Mulan PSL v2 for more details.
+#
+
+
 from collections.abc import Callable, Generator
 from functools import wraps
 from types import GeneratorType
@@ -44,37 +59,32 @@ class Task[T]:
             self._result = result
 
         else:
-            raise InvalidStateError()
+            raise InvalidStateError
 
     def set_exception(self, exception: BaseException) -> None:
         if isinstance(self._result, _Missing) and self._exception is None:
             self._exception = exception
 
         else:
-            raise InvalidStateError()
+            raise InvalidStateError
 
     def result(self) -> T:
         if not isinstance(self._result, _Missing):
             return self._result
 
-        elif self._exception is not None:
+        if self._exception is not None:
             raise self._exception
 
-        else:
-            raise InvalidStateError()
+        raise InvalidStateError
 
     def done(self) -> bool:
         return (not isinstance(self._result, _Missing)) or self._exception is not None
 
     def __repr__(self) -> str:
-        gen = cast(GeneratorType[Task[Any], Any, None] | None, self._generator)
+        gen = cast("GeneratorType[Task[Any], Any, None] | None", self._generator)
         gen_qualname = gen.gi_code.co_qualname + "()" if gen is not None else None
 
-        return (
-            f"<{self.__class__.__qualname__}, "
-            f"gen: {gen_qualname}, "
-            f"parent: {repr(self._parent)}>"
-        )
+        return f"<{self.__class__.__qualname__}, gen: {gen_qualname}, parent: {self._parent!r}>"
 
 
 def awaitable[**P, R](
@@ -154,7 +164,7 @@ class EventLoop:
             try:
                 running_gen = running_task.x_generator()
 
-                if throwing is None:
+                if throwing is None:  # noqa: SIM108
                     new_task = running_gen.send(sending)
 
                 else:
